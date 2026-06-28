@@ -1,0 +1,14 @@
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+### IDE ###
+.idea/
+*.iml
+.vscode/
+.DS_Store
+
+### Sensitive config (DB credentials, API keys) ###
+src/main/resources/application.yml
+src/main/resources/application-local.yml
+src/main/resources/application-prod.yml

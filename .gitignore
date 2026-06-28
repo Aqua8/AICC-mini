@@ -1,0 +1,25 @@
+# Backend
+backend/src/main/resources/application.yml
+backend/build/
+backend/.gradle/
+backend/.idea/
+*.class
+*.jar
+*.war
+
+# Gradle
+.gradle/
+
+# macOS
+.DS_Store
+
+# IntelliJ IDEA
+*.iml
+*.iws
+.idea/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+frontend/.env.local
