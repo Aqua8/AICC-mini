@@ -148,11 +148,11 @@ function FaqSection() {
   useEffect(() => { reload() }, [])
 
   const handleAdd = async (values) => {
-    await createFaq({ ...values, categoryId: values.categoryId || null })
+    await createFaq({ ...values, categoryId: values.categoryId ? Number(values.categoryId) : null })
     setShowAdd(false); reload()
   }
   const handleEdit = async (id, values) => {
-    await updateFaq(id, { ...values, categoryId: values.categoryId || null })
+    await updateFaq(id, { ...values, categoryId: values.categoryId ? Number(values.categoryId) : null })
     setEditId(null); reload()
   }
   const handleDelete = async (id) => {

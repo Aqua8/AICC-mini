@@ -74,7 +74,7 @@ export default function Chat() {
     }
   }
 
-  const isClosed = room?.status === 'CLOSED'
+  const isClosed = room?.status === 'ENDED'
 
   return (
     <div className="flex flex-col h-full">

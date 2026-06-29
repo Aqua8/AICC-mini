@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { getAuth, isAdmin } from './store/authStore'
 
@@ -8,14 +9,26 @@ import Consultations from './pages/Consultations'
 import Dashboard from './pages/Dashboard'
 import Admin from './pages/Admin'
 
+function useAuth() {
+  const [auth, setAuth] = useState(getAuth)
+  useEffect(() => {
+    const sync = () => setAuth(getAuth())
+    window.addEventListener('auth-change', sync)
+    return () => window.removeEventListener('auth-change', sync)
+  }, [])
+  return auth
+}
+
 /** 로그인이 필요한 라우트 */
 function PrivateRoute({ children }) {
-  return getAuth() ? children : <Navigate to="/login" replace />
+  const auth = useAuth()
+  return auth ? children : <Navigate to="/login" replace />
 }
 
 /** ADMIN 전용 라우트 */
 function AdminRoute({ children }) {
-  if (!getAuth()) return <Navigate to="/login" replace />
+  const auth = useAuth()
+  if (!auth) return <Navigate to="/login" replace />
   if (!isAdmin()) return <Navigate to="/chat" replace />
   return children
 }
