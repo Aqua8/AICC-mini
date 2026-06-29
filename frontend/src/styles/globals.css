@@ -1,0 +1,359 @@
+/* Google Fonts: Inter (영문) + Noto Sans KR (한글) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ═══════════════════════════════════════════
+   BASE
+═══════════════════════════════════════════ */
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply font-sans text-base text-gray-800 bg-gray-50;
+  }
+
+  h1 { @apply text-3xl font-bold   text-gray-900 tracking-tight; }
+  h2 { @apply text-2xl font-semibold text-gray-900 tracking-tight; }
+  h3 { @apply text-xl  font-semibold text-gray-800; }
+  h4 { @apply text-lg  font-medium  text-gray-800; }
+  h5 { @apply text-base font-medium  text-gray-700; }
+  h6 { @apply text-sm  font-medium  text-gray-700; }
+
+  p  { @apply text-gray-700 leading-relaxed; }
+
+  a  { @apply text-primary-600 hover:text-primary-700 transition-colors duration-150; }
+
+  /* 커스텀 스크롤바 (WebKit) */
+  ::-webkit-scrollbar        { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track  { @apply bg-transparent; }
+  ::-webkit-scrollbar-thumb  { @apply bg-gray-300 rounded-pill; }
+  ::-webkit-scrollbar-thumb:hover { @apply bg-gray-400; }
+}
+
+/* ═══════════════════════════════════════════
+   COMPONENTS
+═══════════════════════════════════════════ */
+@layer components {
+
+  /* ── 버튼 기반 클래스 ──────────────────── */
+  .btn-base {
+    @apply inline-flex items-center justify-center gap-2
+           font-medium rounded-md
+           transition-all duration-150
+           focus:outline-none
+           disabled:opacity-50 disabled:cursor-not-allowed
+           select-none cursor-pointer whitespace-nowrap;
+  }
+
+  /* Primary 버튼: 주요 액션 (상담 시작, 전송, 저장 등) */
+  .btn-primary {
+    @apply btn-base
+           px-4 py-2 text-sm
+           bg-primary-600 text-white
+           hover:bg-primary-700 active:bg-primary-800
+           shadow-button-pri
+           focus:ring-2 focus:ring-primary-500 focus:ring-offset-1;
+  }
+
+  /* Secondary 버튼: 보조 액션 (취소, 필터 등) */
+  .btn-secondary {
+    @apply btn-base
+           px-4 py-2 text-sm
+           bg-white text-gray-700
+           border border-gray-200
+           hover:bg-gray-50 hover:border-gray-300
+           active:bg-gray-100
+           focus:ring-2 focus:ring-primary-400 focus:ring-offset-1;
+  }
+
+  /* Danger 버튼: 삭제, 상담 종료 등 destructive 액션 */
+  .btn-danger {
+    @apply btn-base
+           px-4 py-2 text-sm
+           bg-error-600 text-white
+           hover:bg-error-700 active:bg-error-700
+           focus:ring-2 focus:ring-error-500 focus:ring-offset-1;
+  }
+
+  /* Ghost 버튼: 아이콘 버튼, 사이드바 내 액션 */
+  .btn-ghost {
+    @apply btn-base
+           px-3 py-2 text-sm
+           text-gray-600
+           hover:bg-gray-100 hover:text-gray-800
+           focus:ring-2 focus:ring-gray-300;
+  }
+
+  /* Small 버튼 크기 modifier */
+  .btn-sm {
+    @apply px-3 py-1.5 text-xs;
+  }
+
+  /* Large 버튼 크기 modifier */
+  .btn-lg {
+    @apply px-5 py-2.5 text-base;
+  }
+
+
+  /* ── 인풋 필드 ────────────────────────── */
+  .input-field {
+    @apply w-full px-3.5 py-2.5
+           text-sm text-gray-800
+           bg-white border border-gray-200 rounded-md
+           placeholder:text-gray-400
+           transition-all duration-150
+           focus:outline-none
+           focus:border-primary-500
+           focus:ring-2 focus:ring-primary-500/20
+           disabled:bg-gray-50 disabled:text-gray-400 disabled:cursor-not-allowed;
+  }
+
+  .input-field-error {
+    @apply input-field border-error-400 focus:border-error-500 focus:ring-error-500/20;
+  }
+
+  .input-label {
+    @apply block text-sm font-medium text-gray-700 mb-1.5;
+  }
+
+  .input-hint {
+    @apply mt-1.5 text-xs text-gray-500;
+  }
+
+  .input-error-msg {
+    @apply mt-1.5 text-xs text-error-600;
+  }
+
+
+  /* ── 카드 ────────────────────────────── */
+  .card {
+    @apply bg-white border border-gray-100 rounded-xl shadow-card p-5;
+  }
+
+  .card-hover {
+    @apply card cursor-pointer
+           transition-all duration-200
+           hover:shadow-card-hover hover:border-gray-200;
+  }
+
+  .card-header {
+    @apply flex items-center justify-between mb-4 pb-3 border-b border-gray-100;
+  }
+
+  .card-title {
+    @apply text-sm font-semibold text-gray-800;
+  }
+
+
+  /* ── 배지/태그 (처리 상태) ───────────── */
+  .badge {
+    @apply inline-flex items-center gap-1
+           px-2 py-0.5
+           rounded-full text-xs font-medium;
+  }
+
+  /* RESOLVED - 해결됨 */
+  .badge-resolved {
+    @apply badge bg-success-50 text-success-700;
+  }
+
+  /* UNRESOLVED - 미해결 */
+  .badge-unresolved {
+    @apply badge bg-error-50 text-error-600;
+  }
+
+  /* IN_PROGRESS - 진행중 */
+  .badge-in-progress {
+    @apply badge bg-warning-50 text-warning-700;
+  }
+
+  /* 기타 배지 */
+  .badge-primary {
+    @apply badge bg-primary-50 text-primary-700;
+  }
+
+  .badge-gray {
+    @apply badge bg-gray-100 text-gray-600;
+  }
+
+
+  /* ── 채팅 말풍선 ──────────────────────── */
+  /* AI 답변: 왼쪽 정렬, 흰색 배경 */
+  .chat-bubble-ai {
+    @apply max-w-[72%]
+           px-4 py-3
+           rounded-2xl rounded-tl-sm
+           bg-white border border-gray-100 shadow-xs
+           text-sm text-gray-800 leading-relaxed
+           animate-slide-in-left;
+  }
+
+  /* 사용자 메시지: 오른쪽 정렬, primary 배경 */
+  .chat-bubble-user {
+    @apply max-w-[72%]
+           px-4 py-3
+           rounded-2xl rounded-tr-sm
+           bg-primary-600 text-white
+           text-sm leading-relaxed
+           animate-slide-in-right;
+  }
+
+  /* AI 타이핑 인디케이터 */
+  .chat-typing-indicator {
+    @apply flex items-center gap-1 px-4 py-3
+           bg-white border border-gray-100 shadow-xs
+           rounded-2xl rounded-tl-sm w-fit;
+  }
+
+  .chat-typing-dot {
+    @apply w-2 h-2 rounded-full bg-gray-400;
+  }
+
+
+  /* ── 사이드바 ────────────────────────── */
+  .sidebar {
+    @apply fixed left-0 top-0 h-screen w-60
+           bg-white border-r border-gray-100
+           flex flex-col z-40;
+  }
+
+  .sidebar-logo {
+    @apply flex items-center gap-3 h-16 px-5 border-b border-gray-100 shrink-0;
+  }
+
+  .sidebar-nav {
+    @apply flex-1 overflow-y-auto py-3 px-3 space-y-0.5;
+  }
+
+  .sidebar-section-label {
+    @apply px-3 py-2 text-xs font-semibold text-gray-400 uppercase tracking-wider;
+  }
+
+  .sidebar-nav-item {
+    @apply flex items-center gap-3 w-full
+           px-3 py-2.5 rounded-lg
+           text-sm font-medium text-gray-600
+           transition-all duration-150
+           hover:bg-gray-50 hover:text-gray-900;
+  }
+
+  .sidebar-nav-item-active {
+    @apply sidebar-nav-item bg-primary-50 text-primary-700 font-semibold
+           hover:bg-primary-50 hover:text-primary-700;
+  }
+
+  .sidebar-footer {
+    @apply px-4 py-4 border-t border-gray-100 shrink-0;
+  }
+
+
+  /* ── 페이지 레이아웃 ─────────────────── */
+  .page-layout {
+    @apply ml-60 min-h-screen flex flex-col bg-gray-50;
+  }
+
+  .page-header {
+    @apply px-8 py-5 bg-white border-b border-gray-100 shrink-0;
+  }
+
+  .page-title {
+    @apply text-xl font-semibold text-gray-900;
+  }
+
+  .page-subtitle {
+    @apply text-sm text-gray-500 mt-0.5;
+  }
+
+  .page-content {
+    @apply flex-1 px-8 py-6;
+  }
+
+
+  /* ── 통계 카드 (대시보드) ────────────── */
+  .stat-card {
+    @apply card flex flex-col gap-1;
+  }
+
+  .stat-card-label {
+    @apply text-sm font-medium text-gray-500;
+  }
+
+  .stat-card-value {
+    @apply text-3xl font-bold text-gray-900 mt-1;
+  }
+
+  .stat-card-change-up {
+    @apply text-xs font-medium text-success-600 mt-1;
+  }
+
+  .stat-card-change-down {
+    @apply text-xs font-medium text-error-600 mt-1;
+  }
+
+
+  /* ── 테이블 (상담 이력 목록) ─────────── */
+  .table-wrapper {
+    @apply w-full overflow-x-auto rounded-xl border border-gray-100 shadow-card;
+  }
+
+  .table {
+    @apply w-full border-collapse bg-white text-sm;
+  }
+
+  .table thead tr {
+    @apply border-b border-gray-100;
+  }
+
+  .table th {
+    @apply px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide bg-gray-50;
+  }
+
+  .table td {
+    @apply px-4 py-3.5 text-gray-700 border-b border-gray-50;
+  }
+
+  .table tbody tr:last-child td {
+    @apply border-b-0;
+  }
+
+  .table tbody tr {
+    @apply transition-colors duration-100 hover:bg-gray-50/70 cursor-pointer;
+  }
+
+
+  /* ── 기타 유틸리티 ───────────────────── */
+  .divider {
+    @apply border-t border-gray-100;
+  }
+
+  .empty-state {
+    @apply flex flex-col items-center justify-center py-16 text-center text-gray-400;
+  }
+
+  .empty-state-icon {
+    @apply w-12 h-12 mb-3 opacity-40;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1.5 px-3 py-1
+           text-xs font-medium rounded-full border
+           transition-all duration-150 cursor-pointer
+           border-gray-200 text-gray-600
+           hover:border-primary-300 hover:text-primary-700 hover:bg-primary-50;
+  }
+
+  .chip-active {
+    @apply chip border-primary-500 text-primary-700 bg-primary-50;
+  }
+}
