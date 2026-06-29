@@ -1,3 +1,8 @@
+# Local-only docs
+CLAUDE.md
+plan.md
+.claude/
+
 # Backend
 backend/src/main/resources/application.yml
 backend/build/
