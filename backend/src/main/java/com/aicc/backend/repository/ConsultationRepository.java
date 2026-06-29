@@ -14,10 +14,10 @@ public interface ConsultationRepository extends JpaRepository<Consultation, Long
 
     @Query("""
             SELECT c FROM Consultation c
-            LEFT JOIN FETCH c.category
+            LEFT JOIN FETCH c.category cat
             WHERE (:cursor IS NULL OR c.id < :cursor)
               AND (:keyword IS NULL OR c.title LIKE CONCAT('%', :keyword, '%') OR c.summary LIKE CONCAT('%', :keyword, '%'))
-              AND (:categoryId IS NULL OR c.category.id = :categoryId)
+              AND (:categoryId IS NULL OR cat.id = :categoryId)
               AND (:status IS NULL OR c.status = :status)
             ORDER BY c.id DESC
             """)

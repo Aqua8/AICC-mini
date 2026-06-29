@@ -30,7 +30,8 @@ public class ChatController {
     }
 
     @PostMapping("/rooms/{id}/end")
-    public ResponseEntity<ChatRoomResponse> endRoom(@PathVariable Long id) {
-        return ResponseEntity.ok(chatService.endRoom(id));
+    public ResponseEntity<ChatRoomResponse> endRoom(@AuthenticationPrincipal Long userId,
+                                                    @PathVariable Long id) {
+        return ResponseEntity.ok(chatService.endRoom(id, userId));
     }
 }
