@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -23,6 +24,12 @@ public class GlobalExceptionHandler {
                 .findFirst()
                 .map(fe -> fe.getField() + ": " + fe.getDefaultMessage())
                 .orElse("Validation failed");
+        return ResponseEntity.badRequest().body(body(HttpStatus.BAD_REQUEST, message));
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<Map<String, Object>> handleTypeMismatch(MethodArgumentTypeMismatchException e) {
+        String message = "잘못된 파라미터: " + e.getName() + " = " + e.getValue();
         return ResponseEntity.badRequest().body(body(HttpStatus.BAD_REQUEST, message));
     }
 

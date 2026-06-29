@@ -14,10 +14,10 @@ public interface ConsultationRepository extends JpaRepository<Consultation, Long
 
     @Query("""
             SELECT c FROM Consultation c
-            LEFT JOIN FETCH c.category
+            LEFT JOIN FETCH c.category cat
             WHERE (:cursor IS NULL OR c.id < :cursor)
               AND (:keyword IS NULL OR c.title LIKE CONCAT('%', :keyword, '%') OR c.summary LIKE CONCAT('%', :keyword, '%'))
-              AND (:categoryId IS NULL OR c.category.id = :categoryId)
+              AND (:categoryId IS NULL OR cat.id = :categoryId)
               AND (:status IS NULL OR c.status = :status)
             ORDER BY c.id DESC
             """)
@@ -27,7 +27,7 @@ public interface ConsultationRepository extends JpaRepository<Consultation, Long
                                       @Param("status") ConsultationStatus status,
                                       Limit limit);
 
-    @Query("SELECT c.category.name AS name, COUNT(c) AS count FROM Consultation c GROUP BY c.category.name")
+    @Query("SELECT cat.name AS name, COUNT(c) AS count FROM Consultation c LEFT JOIN c.category cat GROUP BY cat.name")
     List<CategoryCount> countByCategory();
 
     long countByStatus(ConsultationStatus status);

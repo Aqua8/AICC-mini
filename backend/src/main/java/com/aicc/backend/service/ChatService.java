@@ -76,12 +76,16 @@ public class ChatService {
     }
 
     @Transactional
-    public ChatRoomResponse endRoom(Long roomId) {
+    public ChatRoomResponse endRoom(Long roomId, Long userId) {
         ChatRoom room = findRoom(roomId);
+        if (!room.getUser().getId().equals(userId)) {
+            throw ApiException.badRequest("권한이 없습니다.");
+        }
         if (room.getStatus() == RoomStatus.ENDED) {
             throw ApiException.badRequest("이미 종료된 상담입니다.");
         }
         room.end();
+        chatRoomRepository.save(room);
 
         List<ChatMessage> messages = chatMessageRepository.findByChatRoomIdOrderByCreatedAtAsc(roomId);
         String summary = messages.isEmpty() ? "대화 내용이 없습니다." : geminiService.summarize(messages);
