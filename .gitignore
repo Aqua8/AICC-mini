@@ -1,6 +1,7 @@
 # Local-only docs
 CLAUDE.md
 plan.md
+qa-report.md
 .claude/
 
 # Backend
