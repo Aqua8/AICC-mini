@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom'
 import { login, signup } from '../api/auth'
 import { setAuth } from '../store/authStore'
 
+const PW_REGEX = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&]).{8,}$/
+const PW_HINT = '영문, 숫자, 특수문자(@$!%*#?&)를 포함한 8자 이상'
+
 export default function Login() {
   const navigate = useNavigate()
   const [mode, setMode] = useState('login') // 'login' | 'signup'
@@ -24,6 +27,11 @@ export default function Login() {
       if (mode === 'login') {
         data = await login(form.email, form.password)
       } else {
+        if (!PW_REGEX.test(form.password)) {
+          setError(PW_HINT)
+          setLoading(false)
+          return
+        }
         data = await signup(form.email, form.password, form.name)
       }
       setAuth(data)
@@ -104,6 +112,9 @@ export default function Login() {
               placeholder="••••••••"
               className="w-full px-3 py-2.5 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-300 focus:border-primary-400 transition"
             />
+            {mode === 'signup' && (
+              <p className="text-[11px] text-gray-400 mt-1">{PW_HINT}</p>
+            )}
           </div>
 
           {error && (
