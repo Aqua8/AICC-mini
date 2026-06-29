@@ -82,6 +82,7 @@ public class ChatService {
             throw ApiException.badRequest("이미 종료된 상담입니다.");
         }
         room.end();
+        chatRoomRepository.save(room);
 
         List<ChatMessage> messages = chatMessageRepository.findByChatRoomIdOrderByCreatedAtAsc(roomId);
         String summary = messages.isEmpty() ? "대화 내용이 없습니다." : geminiService.summarize(messages);

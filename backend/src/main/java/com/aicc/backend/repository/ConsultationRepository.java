@@ -27,7 +27,7 @@ public interface ConsultationRepository extends JpaRepository<Consultation, Long
                                       @Param("status") ConsultationStatus status,
                                       Limit limit);
 
-    @Query("SELECT c.category.name AS name, COUNT(c) AS count FROM Consultation c GROUP BY c.category.name")
+    @Query("SELECT cat.name AS name, COUNT(c) AS count FROM Consultation c LEFT JOIN c.category cat GROUP BY cat.name")
     List<CategoryCount> countByCategory();
 
     long countByStatus(ConsultationStatus status);
