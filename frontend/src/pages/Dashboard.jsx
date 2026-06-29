@@ -65,7 +65,7 @@ export default function Dashboard() {
                   tickFormatter={(v) => v.slice(5)} />
                 <YAxis tick={{ fontSize: 11, fill: '#94A3B8' }} />
                 <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid #E2E8F0' }} />
-                <Line type="monotone" dataKey="count" stroke="#5B6CF9" strokeWidth={2}
+                <Line type="monotone" dataKey="totalCount" stroke="#5B6CF9" strokeWidth={2}
                   dot={false} name="상담 수" />
               </LineChart>
             </ResponsiveContainer>
@@ -82,10 +82,10 @@ export default function Dashboard() {
           ) : (
             <ResponsiveContainer width="100%" height={220}>
               <PieChart>
-                <Pie data={category} dataKey="count" nameKey="categoryName"
+                <Pie data={category} dataKey="count" nameKey="name"
                   cx="50%" cy="50%" outerRadius={80}
-                  label={({ categoryName, percent }) =>
-                    `${categoryName} ${(percent * 100).toFixed(0)}%`}
+                  label={({ name, percent }) =>
+                    `${name} ${(percent * 100).toFixed(0)}%`}
                   labelLine={false}>
                   {category.map((_, i) => (
                     <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />

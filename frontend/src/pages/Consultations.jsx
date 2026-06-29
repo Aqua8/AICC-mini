@@ -40,9 +40,9 @@ export default function Consultations() {
     try {
       const data = await getConsultations(params)
       if (append) {
-        setItems((prev) => [...prev, ...(data.items ?? [])])
+        setItems((prev) => [...prev, ...(data.content ?? [])])
       } else {
-        setItems(data.items ?? [])
+        setItems(data.content ?? [])
       }
       setNextCursor(data.nextCursor ?? null)
       setHasNext(data.hasNext ?? false)
@@ -148,7 +148,7 @@ export default function Consultations() {
               {selected ? selected.title : '불러오는 중...'}
             </h3>
             <button
-              onClick={() => setSelected(null)}
+              onClick={() => { setSelected(null); setDetailLoading(false) }}
               className="btn-ghost btn-sm ml-2"
             >
               ×
