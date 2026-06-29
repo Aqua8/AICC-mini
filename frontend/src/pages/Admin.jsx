@@ -4,9 +4,6 @@ import {
   getFaqs, createFaq, updateFaq, deleteFaq,
 } from '../api/admin'
 
-// ────────────────────────────────────────────────────────────
-// 공용 인라인 폼 컴포넌트
-// ────────────────────────────────────────────────────────────
 function InlineForm({ fields, onSubmit, onCancel, submitLabel = '저장' }) {
   const [values, setValues] = useState(() =>
     Object.fromEntries(fields.map((f) => [f.name, f.defaultValue ?? '']))
@@ -30,7 +27,7 @@ function InlineForm({ fields, onSubmit, onCancel, submitLabel = '저장' }) {
             onChange={(e) => handleChange(f.name, e.target.value)}
             required={f.required}
             rows={3}
-            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-300 resize-none"
+            className="input-field resize-none"
           />
         ) : f.type === 'select' ? (
           <select
@@ -38,7 +35,7 @@ function InlineForm({ fields, onSubmit, onCancel, submitLabel = '저장' }) {
             value={values[f.name]}
             onChange={(e) => handleChange(f.name, e.target.value)}
             required={f.required}
-            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-300 bg-white"
+            className="input-field"
           >
             <option value="">카테고리 선택</option>
             {f.options?.map((opt) => (
@@ -53,57 +50,31 @@ function InlineForm({ fields, onSubmit, onCancel, submitLabel = '저장' }) {
             value={values[f.name]}
             onChange={(e) => handleChange(f.name, e.target.value)}
             required={f.required}
-            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-300"
+            className="input-field"
           />
         )
       )}
       <div className="flex gap-2 pt-1">
-        <button
-          type="submit"
-          className="px-4 py-1.5 bg-primary-600 hover:bg-primary-700 text-white text-sm rounded-md transition-colors"
-        >
-          {submitLabel}
-        </button>
-        <button
-          type="button"
-          onClick={onCancel}
-          className="px-4 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-600 text-sm rounded-md transition-colors"
-        >
-          취소
-        </button>
+        <button type="submit" className="btn-primary btn-sm">{submitLabel}</button>
+        <button type="button" onClick={onCancel} className="btn-secondary btn-sm">취소</button>
       </div>
     </form>
   )
 }
 
-// ────────────────────────────────────────────────────────────
-// 카테고리 섹션
-// ────────────────────────────────────────────────────────────
 function CategorySection() {
   const [categories, setCategories] = useState([])
   const [showAdd, setShowAdd] = useState(false)
   const [editId, setEditId] = useState(null)
 
   const reload = () => getCategories().then(setCategories).catch(() => {})
-
   useEffect(() => { reload() }, [])
 
-  const handleAdd = async (values) => {
-    await createCategory(values)
-    setShowAdd(false)
-    reload()
-  }
-
-  const handleEdit = async (id, values) => {
-    await updateCategory(id, values)
-    setEditId(null)
-    reload()
-  }
-
+  const handleAdd = async (values) => { await createCategory(values); setShowAdd(false); reload() }
+  const handleEdit = async (id, values) => { await updateCategory(id, values); setEditId(null); reload() }
   const handleDelete = async (id) => {
     if (!confirm('카테고리를 삭제하시겠습니까?')) return
-    await deleteCategory(id)
-    reload()
+    await deleteCategory(id); reload()
   }
 
   const ADD_FIELDS = [
@@ -112,34 +83,27 @@ function CategorySection() {
   ]
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 shadow-card">
-      <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-gray-800">카테고리 관리</h3>
-        <button
-          onClick={() => setShowAdd((v) => !v)}
-          className="text-sm px-3 py-1.5 bg-primary-50 text-primary-600 hover:bg-primary-100 border border-primary-200 rounded-md transition-colors"
-        >
+    <div className="card">
+      <div className="card-header">
+        <h3 className="card-title">카테고리 관리</h3>
+        <button onClick={() => setShowAdd((v) => !v)} className="btn-secondary btn-sm">
           + 추가
         </button>
       </div>
 
-      <div className="px-6 py-4 space-y-3">
+      <div className="space-y-3">
         {showAdd && (
           <div className="bg-gray-50 rounded-lg p-4">
-            <InlineForm
-              fields={ADD_FIELDS}
-              onSubmit={handleAdd}
-              onCancel={() => setShowAdd(false)}
-              submitLabel="추가"
-            />
+            <InlineForm fields={ADD_FIELDS} onSubmit={handleAdd}
+              onCancel={() => setShowAdd(false)} submitLabel="추가" />
           </div>
         )}
 
         {categories.length === 0 && !showAdd ? (
-          <p className="text-sm text-gray-400 text-center py-4">카테고리가 없습니다</p>
+          <p className="empty-state py-4 text-sm">카테고리가 없습니다</p>
         ) : (
           categories.map((cat) => (
-            <div key={cat.id} className="border border-gray-200 rounded-lg px-4 py-3">
+            <div key={cat.id} className="border border-gray-100 rounded-lg px-4 py-3">
               {editId === cat.id ? (
                 <InlineForm
                   fields={[
@@ -158,18 +122,8 @@ function CategorySection() {
                     )}
                   </div>
                   <div className="flex gap-2 ml-3">
-                    <button
-                      onClick={() => setEditId(cat.id)}
-                      className="text-xs text-primary-600 hover:underline"
-                    >
-                      수정
-                    </button>
-                    <button
-                      onClick={() => handleDelete(cat.id)}
-                      className="text-xs text-error-600 hover:underline"
-                    >
-                      삭제
-                    </button>
+                    <button onClick={() => setEditId(cat.id)} className="btn-ghost btn-sm text-primary-600">수정</button>
+                    <button onClick={() => handleDelete(cat.id)} className="btn-ghost btn-sm text-error-600">삭제</button>
                   </div>
                 </div>
               )}
@@ -181,9 +135,6 @@ function CategorySection() {
   )
 }
 
-// ────────────────────────────────────────────────────────────
-// FAQ 섹션
-// ────────────────────────────────────────────────────────────
 function FaqSection() {
   const [faqs, setFaqs] = useState([])
   const [categories, setCategories] = useState([])
@@ -194,25 +145,19 @@ function FaqSection() {
     getFaqs().then(setFaqs).catch(() => {})
     getCategories().then(setCategories).catch(() => {})
   }
-
   useEffect(() => { reload() }, [])
 
   const handleAdd = async (values) => {
     await createFaq({ ...values, categoryId: values.categoryId || null })
-    setShowAdd(false)
-    reload()
+    setShowAdd(false); reload()
   }
-
   const handleEdit = async (id, values) => {
     await updateFaq(id, { ...values, categoryId: values.categoryId || null })
-    setEditId(null)
-    reload()
+    setEditId(null); reload()
   }
-
   const handleDelete = async (id) => {
     if (!confirm('FAQ를 삭제하시겠습니까?')) return
-    await deleteFaq(id)
-    reload()
+    await deleteFaq(id); reload()
   }
 
   const faqFields = (defaults = {}) => [
@@ -222,34 +167,27 @@ function FaqSection() {
   ]
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 shadow-card">
-      <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-gray-800">FAQ 관리</h3>
-        <button
-          onClick={() => setShowAdd((v) => !v)}
-          className="text-sm px-3 py-1.5 bg-primary-50 text-primary-600 hover:bg-primary-100 border border-primary-200 rounded-md transition-colors"
-        >
+    <div className="card">
+      <div className="card-header">
+        <h3 className="card-title">FAQ 관리</h3>
+        <button onClick={() => setShowAdd((v) => !v)} className="btn-secondary btn-sm">
           + 추가
         </button>
       </div>
 
-      <div className="px-6 py-4 space-y-3">
+      <div className="space-y-3">
         {showAdd && (
           <div className="bg-gray-50 rounded-lg p-4">
-            <InlineForm
-              fields={faqFields()}
-              onSubmit={handleAdd}
-              onCancel={() => setShowAdd(false)}
-              submitLabel="추가"
-            />
+            <InlineForm fields={faqFields()} onSubmit={handleAdd}
+              onCancel={() => setShowAdd(false)} submitLabel="추가" />
           </div>
         )}
 
         {faqs.length === 0 && !showAdd ? (
-          <p className="text-sm text-gray-400 text-center py-4">FAQ가 없습니다</p>
+          <p className="empty-state py-4 text-sm">FAQ가 없습니다</p>
         ) : (
           faqs.map((faq) => (
-            <div key={faq.id} className="border border-gray-200 rounded-lg px-4 py-3">
+            <div key={faq.id} className="border border-gray-100 rounded-lg px-4 py-3">
               {editId === faq.id ? (
                 <InlineForm
                   fields={faqFields({ question: faq.question, answer: faq.answer, categoryId: faq.categoryId })}
@@ -262,24 +200,12 @@ function FaqSection() {
                     <p className="text-sm font-medium text-gray-800">Q. {faq.question}</p>
                     <p className="text-sm text-gray-600 mt-1 leading-relaxed">A. {faq.answer}</p>
                     {faq.categoryName && (
-                      <span className="inline-block mt-1.5 text-xs bg-primary-50 text-primary-600 px-2 py-0.5 rounded-pill font-medium">
-                        {faq.categoryName}
-                      </span>
+                      <span className="badge-primary mt-1.5">{faq.categoryName}</span>
                     )}
                   </div>
                   <div className="flex gap-2 flex-shrink-0">
-                    <button
-                      onClick={() => setEditId(faq.id)}
-                      className="text-xs text-primary-600 hover:underline"
-                    >
-                      수정
-                    </button>
-                    <button
-                      onClick={() => handleDelete(faq.id)}
-                      className="text-xs text-error-600 hover:underline"
-                    >
-                      삭제
-                    </button>
+                    <button onClick={() => setEditId(faq.id)} className="btn-ghost btn-sm text-primary-600">수정</button>
+                    <button onClick={() => handleDelete(faq.id)} className="btn-ghost btn-sm text-error-600">삭제</button>
                   </div>
                 </div>
               )}
@@ -291,13 +217,10 @@ function FaqSection() {
   )
 }
 
-// ────────────────────────────────────────────────────────────
-// Admin 페이지
-// ────────────────────────────────────────────────────────────
 export default function Admin() {
   return (
-    <div className="p-6 space-y-6 overflow-y-auto h-full">
-      <h2 className="text-base font-semibold text-gray-800">관리자 페이지</h2>
+    <div className="page-content space-y-6 overflow-y-auto">
+      <h2 className="page-title">관리자 페이지</h2>
       <CategorySection />
       <FaqSection />
     </div>
