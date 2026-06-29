@@ -214,22 +214,22 @@ aicc-frontend/
 
 ## 진행 현황
 
-- [ ] DB 생성 및 테이블 설계
-- [ ] Spring Boot 프로젝트 세팅
-- [ ] application.yml 설정
-- [ ] JWT 인증 구현
-- [ ] Gemini API 연동
-- [ ] WebSocket 실시간 채팅 구현
-- [ ] 상담 이력 API 구현
-- [ ] Spring Batch 가짜 데이터 100만건 생성
-- [ ] Spring Batch 통계 집계 Job
-- [ ] 통계 API 구현
-- [ ] 관리자 API 구현
-- [ ] React 프로젝트 생성
-- [ ] 고객 채팅 화면
-- [ ] 상담 이력 페이지
-- [ ] 통계 대시보드 페이지
-- [ ] 관리자 페이지
+- [x] DB 생성 및 테이블 설계
+- [x] Spring Boot 프로젝트 세팅
+- [x] application.yml 설정
+- [x] JWT 인증 구현
+- [x] Gemini API 연동
+- [x] WebSocket 실시간 채팅 구현
+- [x] 상담 이력 API 구현
+- [x] Spring Batch 가짜 데이터 100만건 생성
+- [x] Spring Batch 통계 집계 Job
+- [x] 통계 API 구현
+- [x] 관리자 API 구현
+- [x] React 프로젝트 생성
+- [x] 고객 채팅 화면
+- [x] 상담 이력 페이지
+- [x] 통계 대시보드 페이지
+- [x] 관리자 페이지
 - [ ] 인덱스 튜닝 + 성능 최적화
 - [ ] 트래킹 스크립트 연동
 - [ ] Google Cloud VM 배포
