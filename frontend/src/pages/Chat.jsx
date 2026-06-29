@@ -14,9 +14,13 @@ export default function Chat() {
   const bottomRef = useRef(null)
 
   // 새 WebSocket 메시지 수신
+  // 백엔드가 USER 메시지도 브로드캐스트하므로, AI 메시지만 처리
+  // (USER 메시지는 handleSend에서 낙관적 UI로 이미 표시됨)
   const handleWsMessage = (msg) => {
-    setAiTyping(false)
-    setMessages((prev) => [...prev, msg])
+    if (msg.sender === 'AI') {
+      setAiTyping(false)
+      setMessages((prev) => [...prev, msg])
+    }
   }
 
   const { sendMessage } = useWebSocket(room?.id ?? null, handleWsMessage)

@@ -55,8 +55,9 @@ export default function Dashboard() {
     )
   }
 
+  // 백엔드 SummaryResponse.resolutionRate 는 이미 퍼센트값(예: 75.0)으로 반환됨
   const resolutionPct = summary
-    ? `${(summary.resolutionRate * 100).toFixed(1)}%`
+    ? `${summary.resolutionRate.toFixed(1)}%`
     : '-'
 
   return (
