@@ -59,6 +59,14 @@ public class Consultation {
         this.status = ConsultationStatus.RESOLVED;
     }
 
+    public void changeCategory(Category category) {
+        this.category = category;
+    }
+
+    public void changeStatus(ConsultationStatus status) {
+        this.status = status;
+    }
+
     @PrePersist
     void onCreate() {
         if (this.createdAt == null) {

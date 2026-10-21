@@ -1,6 +1,11 @@
 import { useState, useEffect, useCallback } from 'react'
-import { getConsultations, getConsultation } from '../api/consultations'
-import { getCategories } from '../api/admin'
+import {
+  getConsultations,
+  getConsultation,
+  updateConsultationStatus,
+  updateConsultationCategory,
+} from '../api/consultations'
+import { getCategories } from '../api/categories'
 import ConsultationCard from '../components/ConsultationCard'
 import MessageBubble from '../components/MessageBubble'
 
@@ -9,6 +14,11 @@ const STATUS_OPTIONS = [
   { value: 'RESOLVED', label: '해결됨' },
   { value: 'UNRESOLVED', label: '미해결' },
   { value: 'IN_PROGRESS', label: '진행중' },
+]
+
+const STATUS_EDIT_OPTIONS = [
+  { value: 'RESOLVED', label: '해결됨' },
+  { value: 'UNRESOLVED', label: '미해결' },
 ]
 
 export default function Consultations() {
@@ -25,6 +35,7 @@ export default function Consultations() {
 
   const [selected, setSelected] = useState(null)
   const [detailLoading, setDetailLoading] = useState(false)
+  const [statusSaving, setStatusSaving] = useState(false)
 
   useEffect(() => {
     getCategories().then(setCategories).catch(() => {})
@@ -60,6 +71,35 @@ export default function Consultations() {
     setLoadingMore(true)
     await fetchItems(nextCursor, true)
     setLoadingMore(false)
+  }
+
+  const handleStatusChange = async (nextStatus) => {
+    if (!selected || selected.status === nextStatus || statusSaving) return
+    setStatusSaving(true)
+    try {
+      const updated = await updateConsultationStatus(selected.id, nextStatus)
+      setSelected((prev) => ({ ...prev, status: updated.status }))
+      setItems((prev) => prev.map((it) => (it.id === updated.id ? { ...it, status: updated.status } : it)))
+    } catch {
+      alert('상태를 변경하지 못했습니다.')
+    } finally {
+      setStatusSaving(false)
+    }
+  }
+
+  const handleCategoryChange = async (e) => {
+    if (!selected || statusSaving) return
+    const nextId = e.target.value ? Number(e.target.value) : null
+    setStatusSaving(true)
+    try {
+      const updated = await updateConsultationCategory(selected.id, nextId)
+      setSelected((prev) => ({ ...prev, categoryId: nextId, categoryName: updated.categoryName }))
+      setItems((prev) => prev.map((it) => (it.id === updated.id ? { ...it, categoryName: updated.categoryName } : it)))
+    } catch {
+      alert('카테고리를 변경하지 못했습니다.')
+    } finally {
+      setStatusSaving(false)
+    }
   }
 
   const handleCardClick = async (id) => {
@@ -167,10 +207,39 @@ export default function Consultations() {
                   </div>
                 )}
 
-                <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500">
-                  {selected.categoryName && (
-                    <span className="badge-primary">{selected.categoryName}</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-semibold text-gray-500">상담 결과</span>
+                  {STATUS_EDIT_OPTIONS.map(({ value, label }) => (
+                    <button
+                      key={value}
+                      onClick={() => handleStatusChange(value)}
+                      disabled={statusSaving}
+                      className={selected.status === value ? 'btn-primary btn-sm' : 'btn-ghost btn-sm'}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                  {selected.status === 'IN_PROGRESS' && (
+                    <span className="text-xs text-gray-400">현재 진행중</span>
                   )}
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-semibold text-gray-500">카테고리</span>
+                  <select
+                    value={selected.categoryId ?? ''}
+                    onChange={handleCategoryChange}
+                    disabled={statusSaving}
+                    className="text-xs border border-gray-200 rounded-md px-2 py-1 bg-white text-gray-700"
+                  >
+                    <option value="">미분류</option>
+                    {categories.map((c) => (
+                      <option key={c.id} value={c.id}>{c.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500">
                   <span>{new Date(selected.createdAt).toLocaleString('ko-KR')}</span>
                 </div>
 
