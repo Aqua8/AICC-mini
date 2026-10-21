@@ -37,6 +37,11 @@ jwt:
   secret: <JWT_SECRET_AT_LEAST_256_BITS>
   expiration-ms: 86400000
 
+chat:
+  auto-end:
+    grace-seconds: 60      # 연결이 모두 끊긴 뒤 자동 종료까지 유예
+    idle-minutes: 10        # 연결 없이 이 시간 동안 활동이 없으면 점검 때 종료
+
 gemini:
   api-key: <YOUR_GEMINI_API_KEY>
   model: gemini-3.5-flash-lite
