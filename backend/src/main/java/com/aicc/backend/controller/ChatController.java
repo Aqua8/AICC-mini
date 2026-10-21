@@ -1,5 +1,7 @@
 package com.aicc.backend.controller;
 
+import com.aicc.backend.config.jwt.AuthUser;
+import org.springframework.security.core.Authentication;
 import com.aicc.backend.dto.chat.ChatRoomResponse;
 import com.aicc.backend.dto.chat.CreateRoomRequest;
 import com.aicc.backend.service.ChatService;
@@ -25,8 +27,8 @@ public class ChatController {
     }
 
     @GetMapping("/rooms/{id}")
-    public ResponseEntity<ChatRoomResponse> getRoom(@PathVariable Long id) {
-        return ResponseEntity.ok(chatService.getRoom(id));
+    public ResponseEntity<ChatRoomResponse> getRoom(Authentication authentication, @PathVariable Long id) {
+        return ResponseEntity.ok(chatService.getRoom(id, AuthUser.userId(authentication), AuthUser.isAdmin(authentication)));
     }
 
     @PostMapping("/rooms/{id}/end")
