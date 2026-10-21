@@ -1,6 +1,16 @@
 # AICC-mini
 AICC 공부용
 
+## 기술 스택
+
+| 영역 | 기술 |
+|---|---|
+| Backend | Java 21, Spring Boot 4.0.6, Spring Data JPA, Spring Security, Spring WebSocket(STOMP), Spring Batch, JJWT 0.12.6, Lombok, Gradle 8.14.3 |
+| AI | Gemini API (`gemini-3.5-flash-lite`, 무료 등급) |
+| Frontend | React 18.3, React Router 6.30, Vite 5.4, Tailwind CSS 3.4, Recharts 2.15, Axios 1.18, STOMP.js 7.3, SockJS 1.6, Node.js 24 (로컬 개발) |
+| Database | MariaDB (테스트는 H2) |
+| 배포 | Docker (`eclipse-temurin:21`), Docker Compose |
+
 ## Gemini 연동
 - `GEMINI_API_KEY`가 있으면 Gemini API(`gemini-3.5-flash-lite`)로 상담 응답과 상담 종료 요약을 만든다. 없으면 스텁 응답이 나온다.
 - 무료 키는 https://aistudio.google.com/apikey 에서 발급한다. 환경변수로만 넣고 커밋하지 않는다.
