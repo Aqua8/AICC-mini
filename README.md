@@ -26,3 +26,16 @@ AICC 공부용
 - AI 응답은 해당 상담방의 최근 메시지 20개를 `user`/`model` 역할로 Gemini에 보내 만든다. (후속 질문 가능)
 - 응답 생성은 WebSocket 메시지 처리 스레드가 아니라 `AiReplyDispatcher`의 레인(기본 4개, `chat.ai-reply.lanes`)에서 한다. 같은 방은 같은 레인이라 응답 순서가 지켜진다.
 - 상담 종료는 `ACTIVE → ENDED` 조건부 UPDATE로 선점한 뒤, 트랜잭션 밖에서 Gemini 요약을 만들고, 이력 저장만 짧은 트랜잭션으로 한다. 종료 버튼과 자동 종료가 겹쳐도 이력은 한 번만 생긴다.
+
+## 권한
+- 채팅방 조회·종료·메시지 전송은 방 주인만 가능하다. (ADMIN은 조회 가능)
+- WebSocket은 STOMP CONNECT 때 JWT를 검증한다. 구독은 본인 상담방(`/topic/rooms/{id}`)만 허용하고, 토큰이 없거나 남의 방이면 연결이 거부된다.
+- 상담 이력은 ADMIN이 전체, 일반 사용자는 본인 상담만 조회·상태 수정할 수 있다. 남의 이력은 403.
+- ADMIN 만들기(로컬): `UPDATE users SET role = 'ADMIN' WHERE email = '...';` 후 다시 로그인
+
+## 운영 설정과 데이터 일관성
+- CORS는 `cors.allowed-origins`(환경변수 `CORS_ALLOWED_ORIGINS`, 쉼표 구분)에 적은 주소만 허용한다. REST와 WebSocket 핸드셰이크에 모두 적용되고, 기본값은 로컬 개발 주소다. 배포 시 실제 프런트 주소로 바꾼다. 인증은 Authorization 헤더(JWT)만 쓰므로 credentials는 허용하지 않는다.
+- 상담 이력의 카테고리는 상세 패널에서 수정할 수 있다. (`PATCH /api/consultations/{id}/category`, 본인 상담 또는 ADMIN) 카테고리 목록 조회는 로그인한 누구나(`GET /api/categories`), 등록·수정·삭제는 ADMIN(`/api/admin/categories`)이다.
+- 일별 통계는 새벽 1시 배치가 전체를 재집계하는 것과 별개로, 상담 이력이 생기거나 상태가 바뀌면 그 날짜만 바로 다시 집계한다. (`DailyStatsRefresher`)
+- 채팅 화면은 WebSocket이 끊겼다 다시 연결되면 서버 기준으로 대화를 다시 불러와 놓친 AI 응답을 채운다. AI 응답이 60초 넘게 없으면 "입력 중" 표시를 푼다.
+- 알려진 한계: 자동 종료 추적(`ChatSessionTracker`)은 서버 메모리 기반이라 서버를 여러 대로 늘리면 쓸 수 없다. 서버가 하나일 때 재시작은 10분 점검이 보완한다.
