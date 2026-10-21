@@ -13,6 +13,10 @@ AICC 공부용
 - 연결 없이 10분 넘게 비활성인 상담(서버 재시작 등)은 1분마다 점검해 종료한다. 고객 메시지가 없는 상담은 이력을 남기지 않는다.
 - 설정: `chat.auto-end.grace-seconds`, `chat.auto-end.idle-minutes` (`application.yml`)
 
+## 해결/미해결 판정과 수정
+- 상담이 종료되면(버튼·자동 종료 모두) Gemini가 요약과 함께 해결 여부를 판정해 상담 이력의 상태(`RESOLVED`/`UNRESOLVED`)로 저장한다. 요약·판정에 실패하면 확인할 수 없으므로 미해결로 둔다.
+- 상담 이력 화면의 상세 패널에서 "상담 결과"를 해결됨/미해결로 수정할 수 있다. (`PATCH /api/consultations/{id}/status`)
+
 ## 상담 주제: AI·LLM
 - 상담 범위는 LLM 개념, 프롬프트 작성, API 활용, RAG, 파인튜닝, 에이전트·도구 사용, 비용·성능, AI 안전·윤리다. 범위 밖 질문은 안내 후 AI·LLM 질문으로 유도한다. 정책은 `GeminiApiService`의 시스템 프롬프트에 있다.
 - 카테고리(`DefaultCategories`)는 카테고리 테이블이 비어 있으면 서버 시작 시 자동으로 들어간다. 관리자가 만든 카테고리가 있으면 건드리지 않는다.

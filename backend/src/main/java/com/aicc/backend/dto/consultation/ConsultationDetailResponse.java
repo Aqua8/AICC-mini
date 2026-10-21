@@ -11,6 +11,7 @@ public record ConsultationDetailResponse(
         Long chatRoomId,
         String title,
         String summary,
+        Long categoryId,
         String categoryName,
         ConsultationStatus status,
         LocalDateTime createdAt,
