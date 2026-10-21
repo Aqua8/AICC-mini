@@ -2,6 +2,7 @@ package com.aicc.backend.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -31,6 +32,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleTypeMismatch(MethodArgumentTypeMismatchException e) {
         String message = "잘못된 파라미터: " + e.getName() + " = " + e.getValue();
         return ResponseEntity.badRequest().body(body(HttpStatus.BAD_REQUEST, message));
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<Map<String, Object>> handleUnreadable(HttpMessageNotReadableException e) {
+        return ResponseEntity.badRequest().body(body(HttpStatus.BAD_REQUEST, "요청 본문을 읽을 수 없습니다."));
     }
 
     @ExceptionHandler(Exception.class)

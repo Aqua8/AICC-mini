@@ -19,12 +19,14 @@ public interface ConsultationRepository extends JpaRepository<Consultation, Long
               AND (:keyword IS NULL OR c.title LIKE CONCAT('%', :keyword, '%') OR c.summary LIKE CONCAT('%', :keyword, '%'))
               AND (:categoryId IS NULL OR cat.id = :categoryId)
               AND (:status IS NULL OR c.status = :status)
+              AND (:ownerId IS NULL OR c.chatRoomId IN (SELECT r.id FROM ChatRoom r WHERE r.user.id = :ownerId))
             ORDER BY c.id DESC
             """)
     List<Consultation> searchByCursor(@Param("cursor") Long cursor,
                                       @Param("keyword") String keyword,
                                       @Param("categoryId") Long categoryId,
                                       @Param("status") ConsultationStatus status,
+                                      @Param("ownerId") Long ownerId,
                                       Limit limit);
 
     @Query("SELECT cat.name AS name, COUNT(c) AS count FROM Consultation c LEFT JOIN c.category cat GROUP BY cat.name")
