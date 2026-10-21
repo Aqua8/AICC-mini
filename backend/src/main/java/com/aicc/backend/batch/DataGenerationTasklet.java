@@ -1,6 +1,7 @@
 package com.aicc.backend.batch;
 
 import lombok.extern.slf4j.Slf4j;
+import com.aicc.backend.domain.DefaultCategories;
 import org.springframework.batch.core.step.StepContribution;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
@@ -24,15 +25,15 @@ public class DataGenerationTasklet implements Tasklet {
     private static final int HISTORY_DAYS = 90;
 
     private static final String[] USER_SAMPLES = {
-            "배송 언제 오나요?", "환불 받고 싶어요", "상품이 불량이에요", "주문을 취소하고 싶습니다",
-            "교환 가능한가요?", "쿠폰 사용이 안돼요", "결제가 두 번 됐어요", "비밀번호를 잊어버렸어요"
+            "토큰이 뭔가요?", "프롬프트를 어떻게 써야 답이 정확해지나요?", "RAG와 파인튜닝 중 뭐가 나은가요?",
+            "API 호출이 429로 실패해요", "환각을 줄이는 방법이 있나요?", "컨텍스트 윈도우를 넘으면 어떻게 되나요?",
+            "함수 호출은 어떻게 쓰나요?", "프롬프트 인젝션이 뭔가요?"
     };
     private static final String[] AI_SAMPLES = {
-            "확인해 드리겠습니다. 주문번호를 알려주시겠어요?", "환불 절차를 안내해 드리겠습니다.",
-            "불편을 드려 죄송합니다. 교환 접수를 도와드릴게요.", "주문 취소가 정상 처리되었습니다.",
-            "네, 수령 후 7일 이내 교환 가능합니다.", "쿠폰 유효기간을 확인해 보겠습니다."
+            "토큰은 모델이 텍스트를 처리하는 단위입니다.", "역할, 맥락, 출력 형식을 구체적으로 적어 보세요.",
+            "최신 문서를 참조해야 하면 RAG가 적합합니다.", "요청 빈도를 줄이고 재시도 간격을 늘려 보세요.",
+            "근거 문서를 함께 제공하면 환각을 줄일 수 있습니다.", "공식 문서에서 모델별 한도를 확인해 보세요."
     };
-    private static final String[] CATEGORY_NAMES = {"배송", "환불", "교환", "결제", "기술지원", "기타"};
     private static final String[] STATUSES = {"RESOLVED", "UNRESOLVED", "IN_PROGRESS"};
 
     private final JdbcTemplate jdbcTemplate;
@@ -76,8 +77,8 @@ public class DataGenerationTasklet implements Tasklet {
         if (!ids.isEmpty()) {
             return ids;
         }
-        for (String name : CATEGORY_NAMES) {
-            jdbcTemplate.update("INSERT INTO categories (name, description) VALUES (?, ?)", name, name + " 관련 문의");
+        for (DefaultCategories.Item item : DefaultCategories.ITEMS) {
+            jdbcTemplate.update("INSERT INTO categories (name, description) VALUES (?, ?)", item.name(), item.description());
         }
         return jdbcTemplate.queryForList("SELECT id FROM categories", Long.class);
     }
