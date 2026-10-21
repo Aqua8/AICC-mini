@@ -22,6 +22,9 @@ jwt:
   secret: test-secret-key-that-is-long-enough-for-hmac-sha-256-algorithm-0123
   expiration-ms: 86400000
 
+cors:
+  allowed-origins: http://localhost:5173
+
 gemini:
   api-key:
   model: gemini-3.5-flash-lite
