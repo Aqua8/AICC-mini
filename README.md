@@ -7,6 +7,12 @@ AICC 공부용
 - 호출이 실패(한도 초과 등)하면 안내 문구로 대체해 상담이 끊기지 않는다.
 - 실제 호출 검증 테스트: `GEMINI_API_KEY=... ./gradlew test --tests '*GeminiApiServiceLiveTest'` (키가 없으면 건너뜀)
 
+## 상담 세션 유지와 자동 저장
+- 채팅 상태와 WebSocket 연결은 앱 레이아웃(`ChatProvider`)이 들고 있어, 상담 이력·대시보드에 다녀와도 진행 중인 상담이 유지된다. 새로고침하면 localStorage의 방 번호로 복원한다.
+- "상담 종료" 버튼 없이 창을 닫아도 백엔드(`ChatSessionTracker`)가 연결이 모두 끊긴 뒤 60초 뒤에 상담을 종료하고 요약을 상담 이력에 저장한다. 그 안에 다시 접속하면 취소된다.
+- 연결 없이 10분 넘게 비활성인 상담(서버 재시작 등)은 1분마다 점검해 종료한다. 고객 메시지가 없는 상담은 이력을 남기지 않는다.
+- 설정: `chat.auto-end.grace-seconds`, `chat.auto-end.idle-minutes` (`application.yml`)
+
 ## 대화 맥락과 비동기 응답
 - AI 응답은 해당 상담방의 최근 메시지 20개를 `user`/`model` 역할로 Gemini에 보내 만든다. (후속 질문 가능)
 - 응답 생성은 WebSocket 메시지 처리 스레드가 아니라 `AiReplyDispatcher`의 레인(기본 4개, `chat.ai-reply.lanes`)에서 한다. 같은 방은 같은 레인이라 응답 순서가 지켜진다.

@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { getAuth, isAdmin } from './store/authStore'
 
 import Layout from './components/Layout'
+import { ChatProvider } from './store/ChatContext'
 import Login from './pages/Login'
 import Chat from './pages/Chat'
 import Consultations from './pages/Consultations'
@@ -44,7 +45,9 @@ export default function App() {
           path="/"
           element={
             <PrivateRoute>
-              <Layout />
+              <ChatProvider>
+                <Layout />
+              </ChatProvider>
             </PrivateRoute>
           }
         >
