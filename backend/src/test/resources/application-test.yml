@@ -23,6 +23,6 @@ jwt:
   expiration-ms: 86400000
 
 gemini:
-  api-key: test-key
-  model: gemini-1.5-flash
+  api-key:
+  model: gemini-3.5-flash-lite
   base-url: https://generativelanguage.googleapis.com
