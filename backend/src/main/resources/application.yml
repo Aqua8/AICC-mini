@@ -12,7 +12,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: ${JPA_DDL_AUTO:update}  # 운영은 none 권장
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MariaDBDialect
